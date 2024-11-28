@@ -1,18 +1,25 @@
 <script setup lang="ts">
-// import { ref } from 'vue'
-
-// interface Props {
-
-// }
+import { Header, Footer } from '@/components'
+import BriefInfo from './BriefInfo.vue'
+import Diseases from './Diseases.vue'
+import InfoDiseases from './InfoDiseases.vue'
 </script>
 
 <template>
-  <div class="block">
-    <h2 class="title">Home Page</h2>
+  <div class="container">
+    <Header />
+    <BriefInfo />
+    <img class="interblock" src="@//shared/assets/img/vine-back.png" alt="" />
+    <Diseases />
+    <InfoDiseases />
+    <Footer />
   </div>
 </template>
 
 <style scoped lang="scss">
-// .block {
-// }
+.interblock {
+  width: 100%;
+  user-select: none;
+  margin-bottom: 40px;
+}
 </style>

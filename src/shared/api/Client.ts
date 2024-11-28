@@ -1,57 +1,33 @@
-import axios, { type AxiosRequestConfig, type ResponseType } from "axios";
+import { type AxiosInstance, type AxiosRequestConfig } from 'axios'
+import { type IClient } from './model/types'
+import { BASE_API } from './model'
 
-interface Client {
-  data?: unknown | undefined;
-  method?: string | undefined;
-  url: string | undefined;
-  params?: string | undefined | object;
-  body?: unknown | undefined;
-  headers?:
-    | {
-        [key: string]: string;
-      }
-    | undefined;
-  responseType?: ResponseType;
-}
-
-const REQUEST_TIMEOUT = 10000;
-
-const API = axios.create({
-  baseURL: "https://idykvrachy.ru/api/",
-  timeout: REQUEST_TIMEOUT,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "multipart/form-data",
-  },
-});
-
-export const ApiClient = async ({
-  data,
-  method = "GET",
-  url,
-  params,
-  headers,
-  responseType = "json",
-}: Client) => {
+export const ApiClient = async (
+  { url, method = 'GET', data, params, headers }: IClient,
+  scheme: AxiosInstance = BASE_API,
+) => {
   const requestParams: AxiosRequestConfig = {
     method,
     url,
     params,
     data,
-    responseType,
-  };
+  }
 
-  API.defaults.headers = { ...API.defaults.headers, ...headers };
+  scheme.defaults.headers = { ...scheme.defaults.headers, ...headers }
 
-  return API(requestParams)
-    .then((res) => ({ data: res.data, status: res.status }))
+  return scheme(requestParams)
+    .then((res) => ({
+      data: res.data,
+      status: res.status,
+      total: res.headers['x-total-count'],
+    }))
     .catch((err) => {
       console.error(
-        "\nERROR MESSAGE:",
-        err.response.data.message,
-        `\nSTATUS: ${err.response.data.status}`
-      );
+        '\nERROR MESSAGE:',
+        err.response?.data.message,
+        `\nSTATUS: ${err.response?.data.status}`,
+      )
 
-      return { data: "isError", status: err.response.status };
-    });
-};
+      return { data: 'isError', status: err.response?.status, total: '0' }
+    })
+}
