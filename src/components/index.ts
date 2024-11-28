@@ -1,1 +1,2 @@
-// тут глобальные коспоненты, которые используются по всему проекту
+export { Header } from './Header'
+export { Footer } from './Footer'
